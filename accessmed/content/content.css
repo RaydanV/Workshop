@@ -1,0 +1,177 @@
+/* ===== AccessMed injected styles. All classes are prefixed to avoid clashes. ===== */
+
+.accessmed-sr-only {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- High contrast ---------- */
+html.accessmed-high-contrast,
+html.accessmed-high-contrast body,
+html.accessmed-high-contrast *:not([data-accessmed-ui]):not([data-accessmed-ui] *):not(img):not(video):not(svg *) {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+html.accessmed-high-contrast *:not([data-accessmed-ui] *) { background-image: none !important; }
+html.accessmed-high-contrast a:not([data-accessmed-ui] *),
+html.accessmed-high-contrast a:not([data-accessmed-ui] *) * { color: #ffff00 !important; text-decoration: underline !important; }
+html.accessmed-high-contrast button:not([data-accessmed-ui]):not([data-accessmed-ui] *),
+html.accessmed-high-contrast [role=button]:not([data-accessmed-ui] *),
+html.accessmed-high-contrast input:not([data-accessmed-ui] *),
+html.accessmed-high-contrast select:not([data-accessmed-ui] *),
+html.accessmed-high-contrast textarea:not([data-accessmed-ui] *) {
+  border: 2px solid #fff !important;
+}
+html.accessmed-high-contrast img:not([data-accessmed-ui] *) { filter: contrast(1.2); }
+html.accessmed-high-contrast .accessmed-term { color: #7fffd4 !important; }
+
+/* ---------- Dyslexia-friendly spacing ----------
+   WCAG 1.4.12 text spacing values; font falls back to widely installed readable faces. */
+html.accessmed-dyslexia body *:not([data-accessmed-ui] *) {
+  font-family: "OpenDyslexic", "Atkinson Hyperlegible", Verdana, Tahoma, sans-serif !important;
+  line-height: 1.6 !important;
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+}
+html.accessmed-dyslexia p:not([data-accessmed-ui] *) { margin-bottom: 2em !important; }
+
+/* ---------- Focus visibility ---------- */
+html.accessmed-focus-visible :focus-visible {
+  outline: 3px solid #ffbf47 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px #0b0c0c !important;
+}
+
+#accessmed-skip {
+  position: fixed; top: -60px; left: 12px; z-index: 2147483647;
+  background: #0b0c0c; color: #fff; padding: 12px 18px; border-radius: 6px;
+  font: 600 16px/1.2 system-ui, sans-serif; text-decoration: none;
+}
+#accessmed-skip:focus { top: 12px; }
+
+/* Hover-only menus become keyboard-openable. */
+.accessmed-menu-open > ul,
+.accessmed-menu-open > [role=menu],
+.accessmed-menu-open > .dropdown-menu,
+.accessmed-menu-open > [class*=submenu] { display: block !important; visibility: visible !important; opacity: 1 !important; }
+
+.accessmed-typed-date {
+  margin-left: 8px; padding: 6px 8px; font-size: 16px; width: 9em;
+  border: 2px solid #1d70b8; border-radius: 4px;
+}
+.accessmed-typed-date[aria-invalid=true] { border-color: #d4351c; }
+.accessmed-restored { outline: 2px dashed #1d70b8; }
+
+/* ---------- Plain language terms ---------- */
+.accessmed-term {
+  background: #e8f1fb;
+  border-bottom: 2px dotted #1d70b8;
+  border-radius: 3px;
+  padding: 0 2px;
+  cursor: help;
+  position: relative;
+}
+.accessmed-term:hover::after,
+.accessmed-term:focus::after {
+  content: "Original: " attr(data-original);
+  position: absolute; left: 0; top: 100%; margin-top: 4px; z-index: 2147483646;
+  background: #0b0c0c; color: #fff; padding: 4px 8px; border-radius: 4px;
+  font: 13px/1.3 system-ui, sans-serif; white-space: nowrap;
+}
+
+/* ---------- AI summary boxes ---------- */
+/* Sizes in em so the box follows the page's (possibly scaled) text size. */
+.accessmed-ai-panel {
+  display: block; margin: 0.5em 0 1em; padding: 0.75em 1em;
+  background: #f4f0fb; color: #0b0c0c; border-left: 5px solid #5a3e9b; border-radius: 6px;
+  font-family: system-ui, sans-serif; font-size: 1em; line-height: 1.5; text-align: left;
+}
+.accessmed-ai-panel[hidden] { display: none !important; }
+.accessmed-ai-label { font-size: 0.85em; color: #3d3d3d; margin-bottom: 0.4em; }
+.accessmed-ai-badge {
+  display: inline-block; padding: 0 0.45em; border-radius: 4px;
+  background: #5a3e9b; color: #fff; font-weight: 700; letter-spacing: 0.03em;
+}
+.accessmed-ai-text { font-size: 1.05em; }
+.accessmed-ai-actions { display: flex; gap: 0.5em; margin-top: 0.5em; flex-wrap: wrap; }
+.accessmed-ai-actions button {
+  font: 600 0.9em/1.2 system-ui, sans-serif; min-height: 36px; padding: 0.4em 0.8em;
+  border: 2px solid #5a3e9b; border-radius: 6px; background: #fff; color: #3b2a69; cursor: pointer;
+}
+.accessmed-ai-actions button:focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }
+.accessmed-ai-label[hidden], .accessmed-ai-text[hidden], .accessmed-ai-actions button[hidden] { display: none; }
+html.accessmed-high-contrast .accessmed-ai-panel { background: #000 !important; color: #fff !important; border-left-color: #c9b8ff !important; outline: 1px solid #fff; }
+html.accessmed-high-contrast .accessmed-ai-label { color: #fff !important; }
+html.accessmed-high-contrast .accessmed-ai-badge { background: #c9b8ff !important; color: #000 !important; }
+html.accessmed-high-contrast .accessmed-ai-actions button { background: #000 !important; color: #ffff00 !important; border-color: #fff !important; }
+
+/* ---------- Reading ruler ---------- */
+.accessmed-ruler-wrap { position: fixed; inset: 0; pointer-events: none; z-index: 2147483640; }
+.accessmed-ruler-wrap[hidden] { display: none; }
+.accessmed-ruler-shade { position: fixed; left: 0; right: 0; background: rgba(0, 0, 0, 0.45); }
+.accessmed-ruler {
+  position: fixed; left: 0; right: 0;
+  background: rgba(255, 235, 59, 0.12);
+  border-top: 2px solid #ffbf47; border-bottom: 2px solid #ffbf47;
+  transition: top 40ms linear;
+}
+@media (prefers-reduced-motion: reduce) { .accessmed-ruler { transition: none; } }
+
+/* ---------- Voice badge & timeout banner ---------- */
+.accessmed-voice-badge, #accessmed-timeout-banner {
+  position: fixed; left: 50%; transform: translateX(-50%); z-index: 2147483645;
+  background: #0b0c0c; color: #fff; padding: 10px 18px; border-radius: 999px;
+  font: 600 15px/1.3 system-ui, sans-serif; box-shadow: 0 4px 16px rgba(0,0,0,.3);
+}
+.accessmed-voice-badge { bottom: 24px; }
+#accessmed-timeout-banner { top: 16px; background: #00703c; border-radius: 8px; max-width: 90vw; }
+.accessmed-voice-badge[hidden], #accessmed-timeout-banner[hidden] { display: none; }
+
+/* ---------- Panic button & help screen ---------- */
+#accessmed-panic-fab {
+  position: fixed; right: 20px; bottom: 20px; z-index: 2147483646;
+  min-width: 64px; min-height: 64px; padding: 0 22px;
+  background: #d4351c; color: #fff; border: 3px solid #fff; border-radius: 999px;
+  font: 700 20px/1 system-ui, sans-serif; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,.35);
+}
+#accessmed-panic-fab:hover { background: #aa2a16; }
+#accessmed-panic-fab:focus-visible { outline: 4px solid #ffbf47; outline-offset: 3px; }
+#accessmed-panic-fab[hidden] { display: none; }
+
+html.accessmed-panic-open body { overflow: hidden; }
+#accessmed-panic {
+  position: fixed; inset: 0; z-index: 2147483647;
+  background: rgba(11, 12, 12, 0.92);
+  display: grid; place-items: center; padding: 16px;
+  font-family: system-ui, sans-serif;
+}
+.accessmed-panic-card {
+  background: #fff; color: #0b0c0c; border-radius: 16px;
+  max-width: 640px; width: 100%; padding: 32px;
+}
+.accessmed-panic-card h2 { font-size: 30px; line-height: 1.25; margin: 0 0 8px; color: #0b0c0c; }
+.accessmed-panic-card p { font-size: 19px; margin: 0 0 20px; color: #0b0c0c; }
+.accessmed-panic-actions { display: grid; gap: 12px; }
+.accessmed-panic-btn {
+  display: block; width: 100%; box-sizing: border-box; text-align: left;
+  font: 600 22px/1.2 system-ui, sans-serif; padding: 18px 22px; min-height: 64px;
+  border-radius: 12px; border: 3px solid #0b0c0c; background: #f3f2f1; color: #0b0c0c;
+  text-decoration: none; cursor: pointer;
+}
+.accessmed-panic-btn:focus-visible { outline: 4px solid #ffbf47; outline-offset: 3px; }
+.accessmed-panic-btn.accessmed-call { background: #d4351c; border-color: #d4351c; color: #fff; font-size: 26px; }
+.accessmed-panic-btn.accessmed-quiet { background: #fff; }
+.accessmed-panic-note { font-size: 15px !important; color: #505a5f !important; margin: 20px 0 0 !important; }
+
+/* Windows High Contrast / forced-colors: let the OS palette win. */
+@media (forced-colors: active) {
+  .accessmed-term { border-bottom: 2px dotted CanvasText; background: Canvas; }
+  #accessmed-panic-fab, .accessmed-panic-btn { border: 3px solid ButtonText; }
+  .accessmed-ai-panel { border: 2px solid CanvasText; border-left-width: 6px; background: Canvas; color: CanvasText; }
+  .accessmed-ai-badge { border: 1px solid CanvasText; background: Canvas; color: CanvasText; }
+  .accessmed-ai-actions button { border: 2px solid ButtonText; }
+}

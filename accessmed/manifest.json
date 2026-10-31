@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "AccessMed",
+  "version": "0.1.0",
+  "description": "Makes healthcare patient portals accessible: auto-labels, high contrast, plain language, voice control, timeout protection and bill breakdowns.",
+  "permissions": ["storage", "activeTab", "scripting", "tts"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background/service-worker.js",
+    "scripts": ["background/service-worker.js"]
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "AccessMed"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/timeout-guard-main.js"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content/namespace.js",
+        "content/speech-chunks.js",
+        "content/a11y-fixer.js",
+        "content/visual.js",
+        "content/plain-language.js",
+        "content/ai-core.js",
+        "content/ai-rewrite.js",
+        "content/reading-ruler.js",
+        "content/voice-commands.js",
+        "content/billing-parser.js",
+        "content/timeout-guard.js",
+        "content/keyboard-nav.js",
+        "content/panic.js",
+        "content/content.js"
+      ],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "toggle-ruler": {
+      "suggested_key": { "default": "Alt+Shift+R" },
+      "description": "Toggle the reading ruler"
+    },
+    "toggle-voice": {
+      "suggested_key": { "default": "Alt+Shift+V" },
+      "description": "Start or stop voice commands"
+    },
+    "panic": {
+      "suggested_key": { "default": "Alt+Shift+H" },
+      "description": "Open the calm-down help mode"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": { "id": "accessmed@hackathon.dev", "strict_min_version": "128.0" }
+  }
+}

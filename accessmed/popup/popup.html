@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AccessMed</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="top">
+    <h1>AccessMed</h1>
+    <button id="panic" class="panic" type="button">🆘 Help me</button>
+  </header>
+
+  <div role="tablist" aria-label="AccessMed tools" class="tabs">
+    <button role="tab" id="tab-vision" aria-controls="panel-vision" aria-selected="true">See</button>
+    <button role="tab" id="tab-motor" aria-controls="panel-motor" aria-selected="false" tabindex="-1">Move</button>
+    <button role="tab" id="tab-cognitive" aria-controls="panel-cognitive" aria-selected="false" tabindex="-1">Understand</button>
+    <button role="tab" id="tab-bill" aria-controls="panel-bill" aria-selected="false" tabindex="-1">My bill</button>
+  </div>
+
+  <!-- Vision -->
+  <section role="tabpanel" id="panel-vision" aria-labelledby="tab-vision">
+    <p class="status" id="audit-status" aria-live="polite">Checking this page…</p>
+    <label class="switch"><input type="checkbox" data-setting="autoFix"> Auto-fix missing labels</label>
+    <label class="switch"><input type="checkbox" data-setting="highContrast"> High contrast</label>
+    <div class="field">
+      <label for="fontScale">Text size <output id="fontScaleOut" for="fontScale">100%</output></label>
+      <input type="range" id="fontScale" data-setting="fontScale" min="0.8" max="2" step="0.1">
+    </div>
+    <div class="row">
+      <button type="button" id="read">🔊 Read page</button>
+      <button type="button" id="stop">⏹ Stop</button>
+    </div>
+    <p class="hint">Tip: select text first to hear just that part. Hold Alt and hover to hear a button.</p>
+    <details>
+      <summary>What was fixed</summary>
+      <ul id="audit-list"></ul>
+    </details>
+  </section>
+
+  <!-- Motor -->
+  <section role="tabpanel" id="panel-motor" aria-labelledby="tab-motor" hidden>
+    <button type="button" id="voice" class="big" aria-pressed="false">🎤 Start voice control</button>
+    <p class="hint" id="voice-hint">Try: “scroll down”, “click messages”, “read prescription summary”, “help me”.</p>
+    <form id="cmd-form" class="row">
+      <label for="cmd" class="sr-only">Type a command</label>
+      <input id="cmd" type="text" placeholder="Or type a command…" autocomplete="off">
+      <button type="submit">Go</button>
+    </form>
+    <p class="hint" id="cmd-result" aria-live="polite"></p>
+    <label class="switch"><input type="checkbox" data-setting="timeoutGuard"> Stop surprise sign-outs</label>
+    <p class="hint" id="timeout-status"></p>
+    <label class="switch"><input type="checkbox" data-setting="keyboardNav"> Keyboard-friendly calendars and menus</label>
+    <label class="switch"><input type="checkbox" data-setting="panicButton"> Show Help me button on pages</label>
+    <div class="field">
+      <label for="emergencyNumber">Emergency number</label>
+      <input type="tel" id="emergencyNumber" data-setting="emergencyNumber" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="careTeamNumber">Care team or nurse line <span class="hint">(optional)</span></label>
+      <input type="tel" id="careTeamNumber" data-setting="careTeamNumber" autocomplete="off">
+    </div>
+  </section>
+
+  <!-- Cognitive -->
+  <section role="tabpanel" id="panel-cognitive" aria-labelledby="tab-cognitive" hidden>
+    <label class="switch"><input type="checkbox" data-setting="plainLanguage"> Plain language</label>
+    <p class="hint">Medical and billing words are swapped for everyday words. Hover or tab to a highlighted word to see the original.</p>
+    <div class="field">
+      <label for="plainLanguageLang">Language for plain words</label>
+      <select id="plainLanguageLang" data-setting="plainLanguageLang">
+        <option value="auto">Same as the page (automatic)</option>
+      </select>
+      <p class="hint" id="plainLangStatus" aria-live="polite"></p>
+    </div>
+    <div id="ai-row" hidden>
+      <label class="switch"><input type="checkbox" id="aiRewrite"> AI summaries under hard paragraphs</label>
+      <p class="hint">Uses Chrome's built-in AI on this computer. Nothing is sent online. Your portal's text is not changed: a labelled box appears under it.</p>
+      <p class="hint" id="ai-status" aria-live="polite"></p>
+    </div>
+    <label class="switch"><input type="checkbox" data-setting="readingRuler"> Reading ruler</label>
+    <p class="hint">Follows your mouse. Alt + ↑/↓ moves it, Alt + [ or ] resizes it. Shortcut: Alt + Shift + R.</p>
+    <label class="switch"><input type="checkbox" data-setting="dyslexiaFont"> Easier-to-read spacing</label>
+    <div class="field">
+      <label for="tryText">Try it: paste confusing text</label>
+      <textarea id="tryText" rows="3">Patient responsibility after deductible and coinsurance. Hypertension, take 1 tab PO BID.</textarea>
+      <p class="plain-out" id="tryOut" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- Billing -->
+  <section role="tabpanel" id="panel-bill" aria-labelledby="tab-bill" hidden>
+    <div id="bill-empty" class="status">Looking for a bill on this page…</div>
+    <div id="bill-result" hidden>
+      <figure class="viz-root" aria-labelledby="bill-title">
+        <figcaption id="bill-title">Where your <span id="bill-total"></span> bill went</figcaption>
+        <div class="chart-wrap">
+          <svg id="donut" viewBox="0 0 200 200" role="img" aria-labelledby="donut-desc"></svg>
+          <p id="donut-desc" class="sr-only"></p>
+          <div class="center-label" aria-hidden="true">
+            <span class="center-k">You owe</span>
+            <span class="center-v" id="center-owe"></span>
+          </div>
+          <div class="tooltip" id="tooltip" role="presentation" hidden></div>
+        </div>
+        <ul class="legend" id="legend"></ul>
+      </figure>
+      <p class="plain-summary" id="bill-plain"></p>
+      <details>
+        <summary>Show as a table</summary>
+        <table class="bill-table">
+          <thead><tr><th scope="col">Part</th><th scope="col">Amount</th><th scope="col">Share</th></tr></thead>
+          <tbody id="bill-rows"></tbody>
+        </table>
+      </details>
+      <button type="button" id="bill-read">🔊 Read my bill summary</button>
+    </div>
+  </section>
+
+  <script src="../content/plain-language.js"></script>
+  <script src="../content/ai-core.js"></script>
+  <script src="donut-chart.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
